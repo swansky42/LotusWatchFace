@@ -1,0 +1,64 @@
+{
+    "author": "Resonant Way",
+    "dependencies": {
+        "@rebble/clay": "^1.0.8"
+    },
+    "keywords": [
+        "pebble-app"
+    ],
+    "name": "lotus-breathwork",
+    "pebble": {
+        "capabilities": [
+            "configurable"
+        ],
+        "displayName": "Lotus Breathwork",
+        "enableMultiJS": true,
+        "messageKeys": [
+            "HapticFrequency",
+            "Palette[2]",
+            "BreathPattern[3]",
+            "HapticEnabled[4]"
+        ],
+        "projectType": "native",
+        "resources": {
+            "media": [
+                {
+                    "compatibility": "2.7",
+                    "file": "fonts/Jersey10-Regular.ttf",
+                    "name": "FONT_JERSEY_56",
+                    "type": "font"
+                },
+                {
+                    "compatibility": "2.7",
+                    "file": "fonts/Jersey10-Regular.ttf",
+                    "name": "FONT_JERSEY_24",
+                    "type": "font"
+                },
+                {
+                    "file": "images/bt-icon.png",
+                    "name": "IMAGE_BT_ICON",
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/lotus",
+                    "memoryFormat": "Smallest",
+                    "menuIcon": true,
+                    "name": "lotus",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                }
+            ]
+        },
+        "sdkVersion": "3",
+        "targetPlatforms": [
+            "basalt",
+            "emery",
+            "gabbro"
+        ],
+        "uuid": "67d24c1f-ea40-4489-9fee-2b5815efccc6",
+        "watchapp": {
+            "watchface": true
+        }
+    },
+    "version": "1.3.0"
+}
