@@ -16,6 +16,9 @@ static struct tm s_last_time;
 static bool s_qt_active = false;
 static bool s_prompt_handled_this_interval = false;
 
+// Battery % at or below this turns red with a trailing "!"
+#define BATT_LOW_THRESHOLD 14
+
 #if defined(PBL_HEALTH)
 static int s_hr_bpm = 0;   // 0 = no reading yet / no sensor on this device
 #endif
@@ -737,12 +740,19 @@ static void draw_qt_mute_icon(GContext *ctx, int slot_x, int slot_w, int row_y, 
 static void draw_bottom_indicators(GContext *ctx) {
   GRect bounds = layer_get_bounds(s_canvas_layer);
 
+  // Low battery: red text + trailing "!" (the "!" is a non-color cue)
+  const bool batt_low = (s_batt_pct <= BATT_LOW_THRESHOLD);
   char batt[8];
-  snprintf(batt, sizeof(batt), "%d%%", s_batt_pct);
+  if (batt_low) {
+    snprintf(batt, sizeof(batt), "%d%%!", s_batt_pct);
+  } else {
+    snprintf(batt, sizeof(batt), "%d%%", s_batt_pct);
+  }
   char cnt[16];
   snprintf(cnt, sizeof(cnt), "%d", s_breath_count_today);
 
   GColor accent = color_accent();
+  const GColor batt_color = batt_low ? PBL_IF_COLOR_ELSE(GColorRed, accent) : accent;
   graphics_context_set_text_color(ctx, accent);
 
 #if defined(PBL_ROUND)
@@ -750,9 +760,11 @@ static void draw_bottom_indicators(GContext *ctx) {
   const int inset  = 38;
   const int row_w  = bounds.size.w - (inset * 2);
 
+  graphics_context_set_text_color(ctx, batt_color);
   graphics_draw_text(ctx, batt, s_small_font,
                      GRect(inset, row_y, 72, 20),
                      GTextOverflowModeTrailingEllipsis, GTextAlignmentLeft, NULL);
+  graphics_context_set_text_color(ctx, accent);
 
   graphics_draw_text(ctx, cnt, s_small_font,
                      GRect(inset + 60, row_y, row_w - 120, 20),
@@ -776,9 +788,11 @@ static void draw_bottom_indicators(GContext *ctx) {
   const int bt_x = bounds.size.w - bt_w - padding;
   const int bt_y = bounds.size.h - 26;
 
+  graphics_context_set_text_color(ctx, batt_color);
   graphics_draw_text(ctx, batt, s_small_font,
                      GRect(padding, bt_y, 60, 20),
                      GTextOverflowModeTrailingEllipsis, GTextAlignmentLeft, NULL);
+  graphics_context_set_text_color(ctx, accent);
 
 #if defined(PBL_HEALTH)
   if (s_hr_bpm > 0) {
